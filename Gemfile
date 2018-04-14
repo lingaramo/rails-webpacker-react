@@ -33,6 +33,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise_token_auth'
 gem 'pundit'
 
+gem 'fast_jsonapi'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

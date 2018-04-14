@@ -13,9 +13,16 @@
  Add gems.
  gem 'pundit'
  gem 'pry-rails'
- $ bundle install 
+ gem 'fast_jsonapi'
+ $ bundle install
  $ rails g pundit:install
 
+ # Generate user policy
+ $ rails g pundit:policy user
+
+
+ # Generate user serializer.
+ $ rails g serializer User name email id role
 
 
 

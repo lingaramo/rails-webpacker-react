@@ -8,8 +8,20 @@
  $ rails g devise_token_auth:install User auth
  $ rails db:migrate
 
+ Config Devise.setup do |config| consig.password_length = 8...128 end
+
+ Add gems.
+ gem 'pundit'
+ gem 'pry-rails'
+ $ bundle install 
+ $ rails g pundit:install
+
+
+
+
 
 This README would normally document whatever steps are necessary to get the
+
 application up and running.
 
 Things you may want to cover:

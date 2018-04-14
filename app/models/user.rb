@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  validates :password_confirmation, presence: true, on: :create
+
   USER = "user".freeze
   MANAGER = "manager".freeze
   ADMIN = "admin".freeze

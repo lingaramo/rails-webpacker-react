@@ -25,6 +25,10 @@
  $ rails g serializer User name email id role
 
 
+ # RSpec
+ Add gem 'rspec-rails', '~> 3.6' to development-test group
+ $ bundle install
+ $ rails generate rspec:install
 
 
 This README would normally document whatever steps are necessary to get the

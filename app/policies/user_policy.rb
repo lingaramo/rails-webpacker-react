@@ -11,6 +11,10 @@ class UserPolicy < ApplicationPolicy
     end
   end
 
+  def create?
+    user.admin? || user.manager?
+  end
+
   def update?
     user.admin? ||
     user.manager? && record.role == 'user' ||

@@ -4,6 +4,16 @@ class Api::V1::UserController < ApiController
     render json: UserSerializer.new(users).serialized_json
   end
 
+  def create
+    user = User.new(permitted_attributes)
+    authorize(user)
+    if user.save
+      render json: UserSerializer.new(user).serialized_json, status: :created
+    else
+      respond_with_errors(user)
+    end
+  end
+
   def update
     user = User.find(params[:id])
     authorize(user)
@@ -17,7 +27,7 @@ class Api::V1::UserController < ApiController
   private
 
   def permitted_attributes
-    raise Pundit::NotAuthorizedError if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
+    raise Pundit::NotAuthorizedError, message: "Insufficient permissions to select role." if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
     params.require(:user).permit(policy(:user).permitted_attributes)
   end
 end

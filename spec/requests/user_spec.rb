@@ -36,21 +36,21 @@ RSpec.describe "Requests on USER resource" do
       expect(response.body).to eq(UserSerializer.new(User.all).serialized_json)
     end
 
-    # it "can create new users with any role" do
-    #   ['user', 'manager', 'admin'].each do |role|
-    #     payload = data_payload(role: role)
-    #     expect(User.find_by(email: payload[:user][:email])).to be(nil)
-    #     expect {
-    #       post api_v1_user_index_path,
-    #         params: payload,
-    #         headers: headers.merge(authentication_headers_for(admin1))
-    #     }.to change { User.count }.by(+1)
-    #     expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
-    #     expect(response).to have_http_status(201)
-    #     expect(response.body).to eq(
-    #     UserSerializer.new(User.find_by(email: payload[:user][:email])).serialized_json)
-    #   end
-    # end
+    it "can create new users with any role" do
+      ['user', 'manager', 'admin'].each do |role|
+        payload = data_payload(role: role)
+        expect(User.find_by(email: payload[:user][:email])).to be(nil)
+        expect {
+          post api_v1_user_index_path,
+            params: payload,
+            headers: headers.merge(authentication_headers_for(admin1))
+        }.to change { User.count }.by(+1)
+        expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
+        expect(response).to have_http_status(201)
+        expect(response.body).to eq(
+        UserSerializer.new(User.find_by(email: payload[:user][:email])).serialized_json)
+      end
+    end
 
     it "can update any user with any role" do
       [admin2, manager1, user1].each do |user_to_update|
@@ -106,22 +106,29 @@ RSpec.describe "Requests on USER resource" do
       expect(response.body).to eq(UserSerializer.new(User.where.not(role: ['manager', 'admin'])).serialized_json)
     end
 
-    # it "can create new regular users, but not others managers or admin" do
-    #   ['user', 'manager', 'admin'].each do |role|
-    #     payload = data_payload(role: role)
-    #     expect(User.find_by(email: payload[:user][:email])).to be(nil)
-    #     expect {
-    #       post api_v1_user_index_path,
-    #         params: payload,
-    #         headers: headers.merge(authentication_headers_for(manager1))
-    #     }.to change { User.count }.by(+1)
-    #     expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
-    #     expect(response).to have_http_status(201)
-    #
-    #     # Role attribure assignation is forbidden for managers.
-    #     expect(JSON.parse(response.body)["data"]["attributes"]["role"]).to eq('user')
-    #   end
-    # end
+    it "can create new regular users, but not others managers or admin" do
+      ['manager', 'admin'].each do |role|
+        payload = data_payload(role: role)
+        expect(User.find_by(email: payload[:user][:email])).to be(nil)
+        expect {
+          post api_v1_user_index_path,
+            params: payload,
+            headers: headers.merge(authentication_headers_for(manager1))
+        }.to change { User.count }.by(0)
+        expect(response).to have_http_status(403)
+      end
+
+      payload = data_payload(role: 'user')
+      expect(User.find_by(email: payload[:user][:email])).to be(nil)
+      expect {
+        post api_v1_user_index_path,
+          params: payload,
+          headers: headers.merge(authentication_headers_for(manager1))
+      }.to change { User.count }.by(+1)
+      expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
+      expect(response).to have_http_status(201)
+      expect(JSON.parse(response.body)["data"]["attributes"]["role"]).to eq('user')
+    end
 
     it "can update regular users, but not others managers or admin" do
       [admin1, manager2].each do |user_to_update|
@@ -178,12 +185,12 @@ RSpec.describe "Requests on USER resource" do
   end
 
   describe "as user" do
-    # it "can't create a new user" do
-    #   expect {
-    #     post api_v1_user_index_path, params: data_payload, headers: headers.merge(authentication_headers_for(user1))
-    #   }.not_to change { User.count }
-    #   expect(response).to have_http_status(401)
-    # end
+    it "can't create a new user" do
+      expect {
+        post api_v1_user_index_path, params: data_payload, headers: headers.merge(authentication_headers_for(user1))
+      }.not_to change { User.count }
+      expect(response).to have_http_status(403)
+    end
 
     it "can update it's own data" do
       payload = data_payload

@@ -83,13 +83,13 @@ RSpec.describe "Requests on USER resource" do
       expect(response).to have_http_status(200)
     end
 
-    # it "can view any user (#show)" do
-    #   [admin2, manager1, user1].each do |user|
-    #     get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(admin1))
-    #     expect(response).to have_http_status(200)
-    #     expect(response.body).to eq(UserSerializer.new(User.find(user.id)).serialized_json)
-    #   end
-    # end
+    it "can view any user (#show)" do
+      [admin2, manager1, user1].each do |user|
+        get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(admin1))
+        expect(response).to have_http_status(200)
+        expect(response.body).to eq(UserSerializer.new(User.find(user.id)).serialized_json)
+      end
+    end
 
     # it "can delete any user" do
     #   [admin2, manager1, user1].each do |user|
@@ -160,18 +160,20 @@ RSpec.describe "Requests on USER resource" do
       expect(response).to have_http_status(403)
     end
 
-    # it "can view users with regular user role (#show)" do
-    #   [admin2, manager2].each do |user|
-    #     get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
-    #     expect(response).to have_http_status(401)
-    #   end
-    #
-    #   [manager1, user1].each do |user|
-    #     get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
-    #     expect(response).to have_http_status(200)
-    #     expect(response.body).to eq(UserSerializer.new(User.find(user.id)).serialized_json)
-    #   end
-    # end
+    it "can't view other users with manager or admin role (#show)" do
+      [admin2, manager2].each do |user|
+        get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
+        expect(response).to have_http_status(403)
+      end
+    end
+
+    it "can view users with regular user role (#show)" do
+      [manager1, user1].each do |user|
+        get api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
+        expect(response).to have_http_status(200)
+        expect(response.body).to eq(UserSerializer.new(User.find(user.id)).serialized_json)
+      end
+    end
 
     # it "can delete users regular user role" do
     #   [admin1, manager2].each do |user|
@@ -210,20 +212,20 @@ RSpec.describe "Requests on USER resource" do
       expect(response).to have_http_status(403)
     end
 
-    # it "can view its own data (#show)" do
-    #   get api_v1_user_path(user1),
-    #     params: data_payload,
-    #     headers: headers.merge(authentication_headers_for(user1))
-    #   expect(response).to have_http_status(200)
-    #   expect(response.body).to eq(UserSerializer.new(user1).serialized_json)
-    # end
+    it "can view its own data (#show)" do
+      get api_v1_user_path(user1),
+        params: data_payload,
+        headers: headers.merge(authentication_headers_for(user1))
+      expect(response).to have_http_status(200)
+      expect(response.body).to eq(UserSerializer.new(user1).serialized_json)
+    end
 
-    # it "can't view others users data (#show)" do
-    #   get api_v1_user_path(user2),
-    #     params: data_payload,
-    #     headers: headers.merge(authentication_headers_for(user1))
-    #   expect(response).to have_http_status(401)
-    # end
+    it "can't view others users data (#show)" do
+      get api_v1_user_path(user2),
+        params: data_payload,
+        headers: headers.merge(authentication_headers_for(user1))
+      expect(response).to have_http_status(403)
+    end
 
     # it "can't delete other users" do
     #   delete api_v1_user_path(user2), headers: headers.merge(authentication_headers_for(user1))

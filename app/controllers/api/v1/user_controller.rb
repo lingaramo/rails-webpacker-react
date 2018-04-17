@@ -14,6 +14,12 @@ class Api::V1::UserController < ApiController
     end
   end
 
+  def show
+    user = User.find(params[:id])
+    authorize(user)
+    render json: UserSerializer.new(user).serialized_json
+  end
+
   def update
     user = User.find(params[:id])
     authorize(user)

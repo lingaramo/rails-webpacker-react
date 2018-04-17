@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 
+import NavBar from './NavBar/NavBar'
+
 import { Grid, Row, Col } from 'react-bootstrap'
 
 class App extends Component {
@@ -10,9 +12,9 @@ class App extends Component {
     return (
       <Grid>
         <Row className="show-grid">
-            <h1>Nav bar</h1>
+            <NavBar />
         </Row>
-        
+
         <Row className="show-grid">
           <h1>App</h1>
         </Row>

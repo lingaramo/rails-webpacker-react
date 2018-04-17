@@ -25,6 +25,11 @@ class UserPolicy < ApplicationPolicy
     user.id == record.id
   end
 
+  def destroy?
+    user.admin? ||
+    user.manager? && record.role == 'user' && user.id != record.id 
+  end
+
   class Scope < Scope
     def resolve
       if user.admin?

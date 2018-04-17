@@ -91,12 +91,12 @@ RSpec.describe "Requests on USER resource" do
       end
     end
 
-    # it "can delete any user" do
-    #   [admin2, manager1, user1].each do |user|
-    #     delete api_v1_user_path(user), headers: headers.merge(authentication_headers_for(admin1))
-    #     expect(response).to have_http_status(204)
-    #   end
-    # end
+    it "can delete any user" do
+      [admin2, manager1, user1].each do |user|
+        delete api_v1_user_path(user), headers: headers.merge(authentication_headers_for(admin1))
+        expect(response).to have_http_status(204)
+      end
+    end
   end
 
   describe "as manager" do
@@ -175,15 +175,17 @@ RSpec.describe "Requests on USER resource" do
       end
     end
 
-    # it "can delete users regular user role" do
-    #   [admin1, manager2].each do |user|
-    #     delete api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
-    #     expect(response).to have_http_status(401)
-    #   end
-    #
-    #   delete api_v1_user_path(user1), headers: headers.merge(authentication_headers_for(manager1))
-    #   expect(response).to have_http_status(204)
-    # end
+    it "can't delete users with manager or admin role" do
+      [admin1, manager2].each do |user|
+        delete api_v1_user_path(user), headers: headers.merge(authentication_headers_for(manager1))
+        expect(response).to have_http_status(403)
+      end
+    end
+
+    it "can delete users regular user role" do
+      delete api_v1_user_path(user1), headers: headers.merge(authentication_headers_for(manager1))
+      expect(response).to have_http_status(204)
+    end
   end
 
   describe "as user" do
@@ -227,9 +229,9 @@ RSpec.describe "Requests on USER resource" do
       expect(response).to have_http_status(403)
     end
 
-    # it "can't delete other users" do
-    #   delete api_v1_user_path(user2), headers: headers.merge(authentication_headers_for(user1))
-    #   expect(response).to have_http_status(401)
-    # end
+    it "can't delete other users" do
+      delete api_v1_user_path(user2), headers: headers.merge(authentication_headers_for(user1))
+      expect(response).to have_http_status(403)
+    end
   end
 end

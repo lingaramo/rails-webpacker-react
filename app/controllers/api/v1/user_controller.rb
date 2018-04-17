@@ -30,10 +30,16 @@ class Api::V1::UserController < ApiController
     end
   end
 
+  def destroy
+    user = User.find(params[:id])
+    authorize(user)
+    user.destroy
+  end
+
   private
 
   def permitted_attributes
-    raise Pundit::NotAuthorizedError, message: "Insufficient permissions to select role." if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
+    raise Pundit::NotAuthorizedError if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
     params.require(:user).permit(policy(:user).permitted_attributes)
   end
 end

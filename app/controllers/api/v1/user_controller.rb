@@ -1,5 +1,4 @@
 class Api::V1::UserController < ApiController
-
   def index
     users = policy_scope(User)
     render json: UserSerializer.new(users).serialized_json
@@ -18,7 +17,7 @@ class Api::V1::UserController < ApiController
   private
 
   def permitted_attributes
-    raise Pundit::NotAuthorizedError if params[:user].include?(:role) and !current_user.admin?
+    raise Pundit::NotAuthorizedError if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
     params.require(:user).permit(policy(:user).permitted_attributes)
   end
 end

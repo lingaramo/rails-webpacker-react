@@ -27,6 +27,8 @@
 
  # RSpec
  Add gem 'rspec-rails', '~> 3.6' to development-test group
+ gem 'fabrication'
+ gem 'faker'
  $ bundle install
  $ rails generate rspec:install
 

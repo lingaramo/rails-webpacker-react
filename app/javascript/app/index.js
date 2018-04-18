@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ReactDOM.render(
     <Provider store={store}>
-      <Router>
+      <Router basename={"/"}>
         <App />
       </Router>
     </Provider>

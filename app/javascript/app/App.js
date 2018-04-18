@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import NavBar from './NavBar/NavBar'
+import MountApp from './MountApp'
 
 import { Grid, Row, Col } from 'react-bootstrap'
 
@@ -12,11 +14,11 @@ class App extends Component {
     return (
       <Grid>
         <Row className="show-grid">
-            <NavBar />
+          <NavBar />
         </Row>
 
         <Row className="show-grid">
-          <h1>App</h1>
+          <MountApp currentUser={this.props.currentUser} />
         </Row>
       </Grid>
     )
@@ -33,4 +35,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(App)
+export default withRouter(connect(mapStateToProps)(App))

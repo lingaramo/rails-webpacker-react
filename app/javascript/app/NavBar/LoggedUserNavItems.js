@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { withRouter } from 'react-router-dom'
+
 import { Nav, NavItem } from 'react-bootstrap'
 
 const LoggedUserNavItems = ({ currentUser, history }) => {
@@ -30,4 +32,4 @@ LoggedUserNavItems.propTypes = {
 
 
 
-export default LoggedUserNavItems
+export default withRouter(LoggedUserNavItems)

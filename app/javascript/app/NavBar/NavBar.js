@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { Navbar, NavItem, Nav } from 'react-bootstrap'
@@ -21,7 +21,7 @@ const NavBar = ({ currentUser }) => {
 
       <Navbar.Collapse>
         { currentUser.authenticated ?
-          <LoggedUserNavItems { ...props } />
+          <LoggedUserNavItems currentUser={currentUser} />
           :
           <UnLoggedUserNavItems />
         }
@@ -31,7 +31,6 @@ const NavBar = ({ currentUser }) => {
 }
 
 NavBar.propTypes = {
-  history: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired
 }
 
@@ -41,4 +40,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(NavBar))
+export default connect(mapStateToProps)(NavBar)

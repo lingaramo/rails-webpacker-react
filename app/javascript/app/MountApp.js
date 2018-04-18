@@ -3,6 +3,7 @@ import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
 import PublicComponent from './PublicComponent'
+import SignIn from './Authentication/SignIn'
 
 const MountApp = ({ currentUser }) => {
   if  (currentUser.authenticated) {
@@ -20,7 +21,7 @@ const MountApp = ({ currentUser }) => {
     return(
       <Switch>
         <Route exact path="/" component={PublicComponent} />
-        <Route exact path="/sign_in" render={ () => <h1>Sign In Page</h1> } />
+        <Route exact path="/sign_in" component={ SignIn } />
         <Route exact path="/sign_up" render={ () => <h1>Sign Up Page</h1> } />
         <Redirect from="/user*" to="/" />
         <Redirect from="/admin*" to="/" />

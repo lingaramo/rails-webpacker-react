@@ -3,13 +3,26 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { Grid, Row, Col } from 'react-bootstrap'
 
 import NavBar from './NavBar/NavBar'
 import MountApp from './MountApp'
-
-import { Grid, Row, Col } from 'react-bootstrap'
+import apiV1 from './lib/apiV1'
+import { userAuthenticatedAction, userLogoutAction } from './actions'
 
 class App extends Component {
+
+  componentDidMount() {
+    const { dispatch } = this.props
+    apiV1.validateToken().then( response => {
+      dispatch(userAuthenticatedAction(response.data))
+    }).catch( error => {
+      if (error.status == 401) {
+        dispatch(userLogoutAction())
+      }
+    })
+  }
+
   render() {
     return (
       <Grid>
@@ -27,6 +40,7 @@ class App extends Component {
 
 App.propTypes = {
   currentUser: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => {

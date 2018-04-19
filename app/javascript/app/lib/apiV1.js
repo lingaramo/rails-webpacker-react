@@ -80,6 +80,15 @@ class apiV1 {
     })
   }
 
+  createUser( body ) {
+    return fetch('/auth',
+      this.postInitObject( body )
+    ).then(response => {
+      if (response.ok) { return response.json() }
+      else { throw response }
+    })
+  }
+
   signOut() {
     return fetch('/auth/sign_out', this.deleteAuthInitObject()).then( res => {
       if (res.ok) {

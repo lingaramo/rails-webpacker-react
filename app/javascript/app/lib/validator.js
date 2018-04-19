@@ -66,17 +66,33 @@
 //
 // export default validator
 
-export const validateEmail = ( value ) => {
+export const validateEmail = ( email ) => {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!re.test(String(value).toLowerCase())) {
-    return { valid: false, message: ['Invalid email'] }
+  if (!re.test(String(email.value).toLowerCase())) {
+    return { ...email, valid: false, message: ['Invalid email.'] }
   }
-  return { valid: true, message: [] }
+  return { ...email, valid: true, message: [] }
 }
 
-export const validatePassword = value => {
-  if (value.length < 8) {
-    return { valid: false, message: ['Invalid password. Must be at least 8 characters long.'] }
+export const validatePassword = password => {
+  if (password.value.length < 8) {
+    return { ...password, valid: false, message: ['Invalid password. Must be at least 8 characters long.'] }
   }
-  return { valid: true, message: [] }
+  return { ...password, valid: true, message: [] }
+}
+
+export const validatePasswordConfirmation = (password, password_confirmation) => {
+  let validation = { valid: true, message: [] }
+  if ( !password_confirmation.touched ) { return password_confirmation }
+  if ( password.touched && password.value != password_confirmation.value ) {
+    validation.valid = false
+    validation.message.push("Password doesn't match.")
+  }
+
+  if (password_confirmation.value.length < 8 ) {
+    validation.valid = false
+    validation.message.push("Password must be at least 8 characters long.")
+  }
+
+  return { ...password_confirmation, ...validation }
 }

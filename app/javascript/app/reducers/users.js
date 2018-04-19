@@ -4,11 +4,11 @@ const initialUserState = { didInvalidate: true, isFetching: false, data: [] }
 const users = (state = initialUserState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_USERS:
-      return { ...state.users, isFetching: true }
+      return { ...state, isFetching: true }
     case ActionTypes.RECEIVE_USERS:
       return ({ didInvalidate: false, isFetching: false, data: action.users })
     case ActionTypes.INVALIDATE_USERS_LIST:
-      return ({ ...state.users, didInvalidate: true })
+      return ({ ...state, didInvalidate: true })
     case ActionTypes.USER_LOGOUT:
       return initialUserState
     default:

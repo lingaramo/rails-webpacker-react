@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { fetchUsersAction } from '../actions'
+import UsersList from './UsersList'
 
 class AdminComponent extends Component {
 
@@ -12,17 +13,25 @@ class AdminComponent extends Component {
   }
 
   render() {
+    const { users } = this.props
     return(
       <div>
         <h1>Search Component</h1>
-        <h1>Users List Component</h1>
+        <UsersList users={ users } />
       </div>
     )
   }
 }
 
 AdminComponent.propTypes = {
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  users: PropTypes.object.isRequired
 }
 
-export default connect()(AdminComponent)
+const mapStateToProps = state => {
+  return({
+    users: state.users
+  })
+}
+
+export default connect(mapStateToProps)(AdminComponent)

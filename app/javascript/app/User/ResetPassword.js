@@ -1,22 +1,21 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import { Form, FormGroup, FormControl, ControlLabel, Button, Col, HelpBlock } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { Form, FormGroup, FormControl, ControlLabel, Button, Col, HelpBlock } from 'react-bootstrap'
-
-import { userAuthenticatedAction } from '../actions'
-import { validateEmail, validatePassword, validatePasswordConfirmation } from '../lib/validator'
+import { validatePassword, validatePasswordConfirmation } from '../lib/validator'
+import { userLogoutAction } from '../actions'
 import apiV1 from '../lib/apiV1'
 import style from '../style/style'
 
-class SignUp extends Component {
+class ResetPassword extends Component {
 
   constructor(props) {
     super(props)
     let initialObject = { value: "", touched: false, valid: true, message: [] }
     this.state = {
-      email: initialObject,
       password: initialObject,
       password_confirmation: initialObject,
       full_messages: [],
@@ -33,9 +32,6 @@ class SignUp extends Component {
   validateByType = (type) => {
     let validation
     switch (type) {
-      case 'email':
-        validation = validateEmail(this.state.email)
-        break;
       case 'password':
         validation = validatePassword(this.state.password)
         this.validateByType('password_confirmation')
@@ -49,9 +45,8 @@ class SignUp extends Component {
   }
 
   validateForm = () => {
-    const { email, password, password_confirmation } = this.state
+    const { password, password_confirmation } = this.state
     return(
-      email.touched && email.valid &&
       password.touched && password.valid &&
       password_confirmation.touched && password_confirmation.valid
     )
@@ -59,19 +54,21 @@ class SignUp extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    const { location } = this.props
+    const params = new URLSearchParams(location.search)
     if ( this.validateForm() ) {
-      apiV1.createUser(this.formObject()).then( response => {
-        this.props.dispatch(userAuthenticatedAction(response.data))
+      apiV1.resetPassword( params, this.formObject()).then( response => {
+        this.props.dispatch(userLogoutAction(response.data))
+        this.props.history.push("/")
       }).catch( error => error.json().then( errorMessage => {
-        this.setState({ full_messages: errorMessage.errors.full_messages })
+        this.setState({ full_messages: errorMessage.errors })
       }))
     }
   }
 
   formObject = () => {
-    let { email, password, password_confirmation } = this.state
+    let { password, password_confirmation } = this.state
     return({
-      email: email.value,
       password: password.value,
       password_confirmation: password_confirmation.value
     })
@@ -79,22 +76,12 @@ class SignUp extends Component {
 
   render() {
     return (
-      <Form className={ style.FormHorizontal } horizontal>
-        <FormGroup controlId="formHorizontalEmail" validationState={
-          this.state.email.valid && this.state.full_messages.length == 0 ? null : 'error'
-        }>
-          <Col componentClass={ControlLabel} sm={3}>
-            Email
-          </Col>
-          <Col sm={9}>
-            <FormControl type="email" name="email" placeholder="Email" onBlur={this.handleChange} />
-            { this.state.email.message.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
-          </Col>
-        </FormGroup>
-
-        <FormGroup controlId="formHorizontalPassword" validationState={
-          this.state.password.valid && this.state.full_messages.length == 0 ? null : 'error'
-        }>
+      <div>
+        <h1>Reset password</h1>
+        <Form className={ style.FormHorizontal } horizontal>
+          <FormGroup controlId="formHorizontalPassword" validationState={
+            this.state.password.valid && this.state.full_messages.length == 0 ? null : 'error'
+          }>
           <Col componentClass={ControlLabel} sm={3}>
             Password
           </Col>
@@ -105,8 +92,8 @@ class SignUp extends Component {
         </FormGroup>
 
         <FormGroup controlId="formHorizontalPasswordConfirmation" validationState={
-          this.state.password_confirmation.valid && this.state.full_messages.length == 0 ? null : 'error'
-        }>
+            this.state.password_confirmation.valid && this.state.full_messages.length == 0 ? null : 'error'
+          }>
           <Col componentClass={ControlLabel} sm={3}>
             Password Confirmation
           </Col>
@@ -118,19 +105,22 @@ class SignUp extends Component {
 
         <FormGroup>
           <Col smOffset={3} sm={9}>
-            <Button onClick={this.handleSubmit} type="submit">Sign in</Button>
+            <Button onClick={this.handleSubmit} type="submit">Reset password</Button>
           </Col>
         </FormGroup>
-        <Col smOffset={3}>
-          { this.state.full_messages.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
-        </Col>
-      </Form>
+          <Col smOffset={3}>
+            { this.state.full_messages.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
+          </Col>
+        </Form>
+      </div>
     )
   }
 }
 
-SignUp.propTypes = {
+ResetPassword.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 }
 
-export default connect()(SignUp)
+export default withRouter(connect()(ResetPassword))

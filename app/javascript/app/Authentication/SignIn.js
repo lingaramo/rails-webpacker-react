@@ -55,6 +55,18 @@ class SignIn extends Component {
     }
   }
 
+  handleReset = (e) => {
+    e.preventDefault()
+    const { email } = this.state
+    if ( email.touched && email.valid ) {
+      apiV1.requestPasswordReset({ email: email.value }).then( res =>
+        console.log(res.message)
+      ).catch(error => error.json().then(errorMessage => {
+        this.setState({ full_messages: errorMessage.errors })
+      }))
+    }
+  }
+
   validateForm = () => {
     const { email, password, password_confirmation } = this.state
     return(
@@ -101,6 +113,7 @@ class SignIn extends Component {
         <FormGroup>
           <Col smOffset={2} sm={10}>
             <Button onClick={this.handleSubmit} type="submit">Sign in</Button>
+            <Button onClick={this.handleReset} type="submit">Recovery password</Button>
           </Col>
         </FormGroup>
         <Col smOffset={2}>

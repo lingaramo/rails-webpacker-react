@@ -98,6 +98,29 @@ class apiV1 {
     })
   }
 
+  resetPassword( params, body ) {
+    this.setAuthHeaders( params )
+    return fetch('/auth/password', this.putAuthInitObject( body )).then( res => {
+      if (res.ok) {
+        this.setAuthHeaders(new Headers())
+        return res.json()
+      }
+      throw res
+    })
+  }
+
+  requestPasswordReset({ email }) {
+    let body = { email: email, redirect_url: "http://localhost:3000/reset_password" }
+    return fetch('/auth/password', {
+      'method': 'POST',
+      'headers': this.baseHeader,
+      'body': JSON.stringify( body ),
+    }).then(res => {
+      if (res.ok) { return res.json() }
+      throw res
+    })
+  }
+
   validateToken() {
     return fetch(this.baseURL + "/validate_token", this.getAuthInitObject())
       .then( res => {

@@ -8,6 +8,7 @@ class ApiController < ActionController::API
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActionController::RoutingError, with: :route_not_found
 
   private
 
@@ -17,5 +18,9 @@ class ApiController < ActionController::API
 
   def record_not_found(exception)
     render json: { error: exception.message }, status: 404
+  end
+
+  def route_not_found
+    redirect_to("/not_found")
   end
 end

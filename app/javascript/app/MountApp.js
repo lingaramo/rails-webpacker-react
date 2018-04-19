@@ -17,7 +17,7 @@ const MountApp = ({ currentUser }) => {
         <Route path="/admin*" render={ () => <h1>Admin Component</h1> } />
         <Redirect from="/sign_in" to="/user" />
         <Redirect from="/sign_up" to="/user" />
-        <Redirect from="/" to="/user" />
+        <Redirect exact from="/" to="/user" />
         <Route component={ HandleRestOfRoutes } />
       </Switch>
     )

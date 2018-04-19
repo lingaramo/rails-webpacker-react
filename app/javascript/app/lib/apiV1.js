@@ -129,6 +129,12 @@ class apiV1 {
         throw res
     })
   }
+
+  getUsers() {
+    return fetch('/api/v1/user', this.getAuthInitObject()).then( res => {
+      return this.handleResponse( res )
+    })
+  }
 }
 
 export default new apiV1('/auth')

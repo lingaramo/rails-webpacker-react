@@ -34,6 +34,8 @@ gem 'devise_token_auth'
 gem 'pundit'
 
 gem 'fast_jsonapi'
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'will_paginate', '~> 3.1.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

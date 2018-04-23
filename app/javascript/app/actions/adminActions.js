@@ -13,18 +13,50 @@ export const receiveUsers = users => {
   })
 }
 
+export const RECEIVE_PAGINATED_USERS = 'RECEIVE_PAGINATED_USERS'
+export const receivePaginatedUsers = users => {
+  return({
+    type: RECEIVE_PAGINATED_USERS,
+    users
+  })
+}
+
 export const INVALIDATE_USERS_LIST = 'INVALIDATE_USERS_LIST'
 export const invalidateUsersList = () => {
   return({ type: INVALIDATE_USERS_LIST })
 }
 
-export const fetchUsersAction = () => {
-  return dispatch => {
-    dispatch(fetchUsers())
-    apiV1.getUsers().then( res => {
-      dispatch(receiveUsers( res.data ))
-    }).catch( errors => {
-      debugger
-    })
+const shouldFetchUsers = ( state, url ) => {
+  const { users } = state
+  if ( users.isFetching ) { return false }
+  if ( users.didInvalidate ) { return true }
+  if ( users.links.next == url ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const fetchUsersAction = ( url ) => {
+  return (dispatch, getState) => {
+    if (shouldFetchUsers(getState(), url)) {
+      dispatch(fetchUsers())
+      apiV1.getUsers( url ).then( res => {
+        dispatch(receiveUsers( res ))
+      }).catch( errors => {
+      })
+    }
+  }
+}
+
+export const fetchPaginatedUsersAction = ( url ) => {
+  return (dispatch, getState) => {
+    if (shouldFetchUsers(getState(), url)) {
+      dispatch(fetchUsers())
+      apiV1.getUsers( url ).then( res => {
+        dispatch(receivePaginatedUsers( res ))
+      }).catch( errors => {
+      })
+    }
   }
 }

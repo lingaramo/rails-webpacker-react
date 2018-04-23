@@ -7,7 +7,7 @@ import PublicComponent from './PublicComponent'
 import SignIn from './Authentication/SignIn'
 import SignUp from './Authentication/SignUp'
 import UserComponent from './User/UserComponent'
-import AdminComponent from './Admin/AdminComponent'
+import AdminRoutes from './Admin/AdminRoutes'
 import HandleRestOfRoutes from './HandleRestOfRoutes'
 
 const MountApp = ({ currentUser }) => {
@@ -15,7 +15,7 @@ const MountApp = ({ currentUser }) => {
     return(
       <Switch>
         <Route path="/user*" component={ UserComponent } />
-        <Route path="/admin*" component={ AdminComponent } />
+        <Route path="/admin*" component={ AdminRoutes } />
         <Redirect from="/sign_in" to="/user" />
         <Redirect from="/sign_up" to="/user" />
         <Redirect exact from="/" to="/user" />

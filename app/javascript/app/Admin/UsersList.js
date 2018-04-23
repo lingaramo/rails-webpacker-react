@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Table } from 'react-bootstrap'
@@ -23,7 +24,9 @@ const UsersList = ({ users, dispatch }) => {
   }
 
   const nextPage = (atr) => {
-    dispatch(fetchPaginatedUsersAction( users.links.next ))
+    if (users.links.next != undefined) {
+      dispatch(fetchPaginatedUsersAction( users.links.next ))
+    }
   }
 
   return(
@@ -56,4 +59,4 @@ UsersList.propTypes = {
   dispatch: PropTypes.func.isRequired
 }
 
-export default connect()(UsersList)
+export default withRouter(connect()(UsersList))

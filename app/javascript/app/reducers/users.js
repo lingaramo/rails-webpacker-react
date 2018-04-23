@@ -4,6 +4,8 @@ const initialUserState = { didInvalidate: true, isFetching: false, data: [], lin
 const users = (state = initialUserState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_USERS:
+      return { ...initialUserState, isFetching: true }
+    case ActionTypes.FETCH_PAGINATED_USERS:
       return { ...state, isFetching: true }
     case ActionTypes.RECEIVE_USERS:
       return ({
@@ -17,7 +19,7 @@ const users = (state = initialUserState, action) => {
         didInvalidate: false,
         isFetching: false,
         data: [...new Set([...state.data ,...action.users.data])],
-        links: action.users.links || { next: undefined }
+        links: action.users.links
       })
     case ActionTypes.INVALIDATE_USERS_LIST:
       return ({ ...state, didInvalidate: true })

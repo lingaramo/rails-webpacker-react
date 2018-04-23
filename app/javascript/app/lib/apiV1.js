@@ -130,8 +130,14 @@ class apiV1 {
     })
   }
 
-  getUsers( url ) {
-    return fetch( url || '/api/v1/user', this.getAuthInitObject()).then( res => {
+  getUsers( paginated_url ) {
+    return fetch( paginated_url || '/api/v1/user', this.getAuthInitObject()).then( res => {
+      return this.handleResponse( res )
+    })
+  }
+
+  getUser( user_id ) {
+    return fetch( '/api/v1/user/' + user_id, this.getAuthInitObject()).then( res => {
       return this.handleResponse( res )
     })
   }

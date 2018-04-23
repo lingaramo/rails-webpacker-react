@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
 import { fetchUsersAction } from '../actions'
 import UsersList from './UsersList'
@@ -34,4 +35,4 @@ const mapStateToProps = state => {
   })
 }
 
-export default connect(mapStateToProps)(AdminComponent)
+export default withRouter(connect(mapStateToProps)(AdminComponent))

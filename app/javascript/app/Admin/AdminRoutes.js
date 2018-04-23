@@ -1,18 +1,23 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 
 import AdminComponent from './AdminComponent'
-import EditUser from './EditUser'
+import LoadUser from './LoadUser'
 
 const AdminRoutes = props => {
   return(
     <Switch>
-      <Route exact path="/admin" component={AdminComponent} />
-      <Route path="/admin/:id/edit" component={EditUser} />
+      <Route exact path="/admin/" component={AdminComponent} />
+      <Route path="/admin/user/:id/edit" component={LoadUser} />
       <Redirect to="/not_found" />
     </Switch>
   )
 }
 
-export default AdminRoutes
+AdminRoutes.propTypes = {
+  history: PropTypes.object.isRequired
+}
+
+export default withRouter(AdminRoutes)

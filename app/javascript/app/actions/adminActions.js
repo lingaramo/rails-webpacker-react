@@ -5,6 +5,11 @@ export const fetchUsers = () => {
   return({ type: FETCH_USERS })
 }
 
+export const FETCH_PAGINATED_USERS = 'FETCH_PAGINATED_USERS'
+export const fetchPaginatedUsers = () => {
+  return({ type: FETCH_PAGINATED_USERS })
+}
+
 export const RECEIVE_USERS = 'RECEIVE_USERS'
 export const receiveUsers = users => {
   return({
@@ -39,20 +44,21 @@ const shouldFetchUsers = ( state, url ) => {
 
 export const fetchUsersAction = ( url ) => {
   return (dispatch, getState) => {
-    if (shouldFetchUsers(getState(), url)) {
+    // if (shouldFetchUsers(getState(), url)) {
       dispatch(fetchUsers())
       apiV1.getUsers( url ).then( res => {
         dispatch(receiveUsers( res ))
       }).catch( errors => {
       })
-    }
+    // }
   }
 }
 
 export const fetchPaginatedUsersAction = ( url ) => {
   return (dispatch, getState) => {
-    if (shouldFetchUsers(getState(), url)) {
-      dispatch(fetchUsers())
+    if (shouldFetchUsers(getState(), url) && url != undefined) {
+      dispatch(fetchPaginatedUsers())
+      const state = getState()
       apiV1.getUsers( url ).then( res => {
         dispatch(receivePaginatedUsers( res ))
       }).catch( errors => {

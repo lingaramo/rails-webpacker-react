@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 
 import PublicComponent from './PublicComponent'
 import SignIn from './Authentication/SignIn'
@@ -10,7 +10,7 @@ import UserComponent from './User/UserComponent'
 import AdminRoutes from './Admin/AdminRoutes'
 import HandleRestOfRoutes from './HandleRestOfRoutes'
 
-const MountApp = ({ currentUser }) => {
+const MountApp = ({ currentUser, history }) => {
   if  (currentUser.authenticated) {
     return(
       <Switch>
@@ -37,7 +37,8 @@ const MountApp = ({ currentUser }) => {
 }
 
 MountApp.propTypes = {
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
-export default MountApp
+export default withRouter(MountApp)

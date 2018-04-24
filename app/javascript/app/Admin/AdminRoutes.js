@@ -9,7 +9,7 @@ import LoadUser from './LoadUser'
 const AdminRoutes = props => {
   return(
     <Switch>
-      <Route exact path="/admin/" component={AdminComponent} />
+      <Route exact path="/admin" component={AdminComponent} />
       <Route path="/admin/user/:id/edit" component={LoadUser} />
       <Redirect to="/not_found" />
     </Switch>

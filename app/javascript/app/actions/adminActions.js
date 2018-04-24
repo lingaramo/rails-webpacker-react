@@ -44,13 +44,10 @@ const shouldFetchUsers = ( state, url ) => {
 
 export const fetchUsersAction = ( url ) => {
   return (dispatch, getState) => {
-    // if (shouldFetchUsers(getState(), url)) {
-      dispatch(fetchUsers())
-      apiV1.getUsers( url ).then( res => {
-        dispatch(receiveUsers( res ))
-      }).catch( errors => {
-      })
-    // }
+    dispatch(fetchUsers())
+    apiV1.getUsers( url ).then( res => {
+      dispatch(receiveUsers( res ))
+    })
   }
 }
 
@@ -61,7 +58,6 @@ export const fetchPaginatedUsersAction = ( url ) => {
       const state = getState()
       apiV1.getUsers( url ).then( res => {
         dispatch(receivePaginatedUsers( res ))
-      }).catch( errors => {
       })
     }
   }

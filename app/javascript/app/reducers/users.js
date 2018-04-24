@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actions'
 
-const initialUserState = { didInvalidate: true, isFetching: false, data: [], links: { next: undefined } }
+const initialUserState = { didInvalidate: false, isFetching: false, data: [], links: { next: undefined } }
 const users = (state = initialUserState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_USERS:

@@ -4,23 +4,17 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 
 import { Nav, NavItem } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
 
 const UnLoggedUserNavItems = ({ history }) => {
 
   return(
     <Nav pullRight>
-      <LinkContainer to='/sign_in'>
-        <NavItem eventKey={1}>
-          Sign In
-        </NavItem>
-      </LinkContainer>
-
-      <LinkContainer to='/sign_up'>
-        <NavItem eventKey={2}>
-          Sign Up
-        </NavItem>
-      </LinkContainer>
+      <NavItem eventKey={1} onSelect={() => (history.push('/sign_in'))}>
+        Sign In
+      </NavItem>
+      <NavItem eventKey={2} onSelect={() => (history.push('/sign_up'))}>
+        Sign Up
+      </NavItem>
     </Nav>
   )
 }

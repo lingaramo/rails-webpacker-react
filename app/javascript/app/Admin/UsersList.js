@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Table } from 'react-bootstrap'
@@ -19,6 +19,11 @@ const UsersList = ({ users, dispatch }) => {
         <td>{ name }</td>
         <td>{ email }</td>
         <td>{ role }</td>
+        <td>
+          <Link to={"/admin/user/" + id + "/edit"}>
+            Edit
+          </Link>
+        </td>
       </tr>
     )
   }
@@ -30,27 +35,35 @@ const UsersList = ({ users, dispatch }) => {
   }
 
   return(
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={nextPage}
-      initialLoad={ false }
-      hasMore={ users.links.next != undefined }
-      loader={<div className="loader" key={0}>Loading ...</div>}
-      >
-      <Table responsive>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>email</th>
-            <th>role</th>
-          </tr>
-        </thead>
-        <tbody>
-            { users.data.map( user => <UserItem key={user.id} { ...user } />) }
-        </tbody>
-      </Table>
-    </InfiniteScroll>
+    <div>
+      <h1>
+        Users List
+      </h1>
+
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={nextPage}
+        initialLoad={ false }
+        hasMore={ users.links.next != undefined }
+        loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+          <Table responsive>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>email</th>
+                <th>role</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              { users.data.map( user => <UserItem key={user.id} { ...user } />) }
+            </tbody>
+          </Table>
+        </InfiniteScroll>
+    </div>
+
   )
 }
 
@@ -59,4 +72,4 @@ UsersList.propTypes = {
   dispatch: PropTypes.func.isRequired
 }
 
-export default withRouter(connect()(UsersList))
+export default connect()(UsersList)

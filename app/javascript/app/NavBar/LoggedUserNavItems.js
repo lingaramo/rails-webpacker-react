@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Nav, NavItem } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
 
 import apiV1 from '../lib/apiV1'
 import { userLogoutAction } from '../actions'
@@ -19,11 +18,9 @@ const LoggedUserNavItems = ({ currentUser, history, dispatch }) => {
   }
 
   const adminItems = (
-    <LinkContainer to="/admin">
-      <NavItem eventKey={1}>
-        Admin Panel
-      </NavItem>
-    </LinkContainer>
+    <NavItem eventKey={1} href="#" onSelect={() => history.push('/admin')}>
+      Admin Panel
+    </NavItem>
   )
 
   return(

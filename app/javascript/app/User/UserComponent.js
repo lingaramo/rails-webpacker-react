@@ -24,4 +24,4 @@ const mapStateToProps = state => {
   })
 }
 
-export default withRouter(connect(mapStateToProps)(UserComponent))
+export default connect(mapStateToProps)(UserComponent)

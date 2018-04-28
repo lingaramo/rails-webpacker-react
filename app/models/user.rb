@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   validates :password_confirmation, presence: true, on: :create
-
+  validates_length_of :name, maximum: 200, allow_blank: true
 
   USER = "user".freeze
   MANAGER = "manager".freeze

@@ -13,6 +13,13 @@ export const validatePassword = password => {
   return { ...password, valid: true, message: [] }
 }
 
+export const validateName = name => {
+  if (name.value.length > 200) {
+    return { ...name, valid: false, message: ['Name is too long (maximum is 200 characters)'] }
+  }
+  return { ...name, valid: true, message: [] }
+}
+
 export const validatePasswordConfirmation = (password, password_confirmation) => {
   let validation = { valid: true, message: [] }
   if ( !password_confirmation.touched ) { return password_confirmation }

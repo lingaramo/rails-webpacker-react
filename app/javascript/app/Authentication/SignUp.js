@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Col, HelpBlock } from 'react-bootstrap'
 
 import { userAuthenticatedAction } from '../actions'
-import { validateEmail, validatePassword, validatePasswordConfirmation } from '../lib/validator'
+import { validateEmail, validatePassword, validatePasswordConfirmation, validateName } from '../lib/validator'
 import apiV1 from '../lib/apiV1'
 import style from '../style/style'
 
@@ -16,6 +16,7 @@ class SignUp extends Component {
     super(props)
     let initialObject = { value: "", touched: false, valid: true, message: [] }
     this.state = {
+      name: initialObject,
       email: initialObject,
       password: initialObject,
       password_confirmation: initialObject,
@@ -26,6 +27,7 @@ class SignUp extends Component {
   handleChange = (e) => {
     let type = e.target.name
     let value = e.target.value || ""
+    let self = this
     this.setState({ [type]: { ...this.state[type], value: value, touched: true }},
       () => (this.validateByType(type)))
   }
@@ -33,16 +35,19 @@ class SignUp extends Component {
   validateByType = (type) => {
     let validation
     switch (type) {
+      case 'name':
+        validation = validateName(this.state.name)
+        break
       case 'email':
         validation = validateEmail(this.state.email)
-        break;
+        break
       case 'password':
         validation = validatePassword(this.state.password)
         this.validateByType('password_confirmation')
-        break;
+        break
       case 'password_confirmation':
         validation = validatePasswordConfirmation(this.state.password, this.state.password_confirmation)
-        break;
+        break
       default:
     }
     this.setState({ [type]: validation, full_messages: [] })
@@ -51,6 +56,7 @@ class SignUp extends Component {
   validateForm = () => {
     const { email, password, password_confirmation } = this.state
     return(
+      name.touched && name.valid &&
       email.touched && email.valid &&
       password.touched && password.valid &&
       password_confirmation.touched && password_confirmation.valid
@@ -69,8 +75,9 @@ class SignUp extends Component {
   }
 
   formObject = () => {
-    let { email, password, password_confirmation } = this.state
+    let { name, email, password, password_confirmation } = this.state
     return({
+      name: name.value,
       email: email.value,
       password: password.value,
       password_confirmation: password_confirmation.value
@@ -80,6 +87,18 @@ class SignUp extends Component {
   render() {
     return (
       <Form className={ style.FormHorizontal } horizontal>
+        <FormGroup controlId="formHorizontalName" validationState={
+          this.state.name.valid && this.state.full_messages.length == 0 ? null : 'error'
+        }>
+          <Col componentClass={ControlLabel} sm={3}>
+            Name (optional)
+          </Col>
+          <Col sm={9}>
+            <FormControl type="name" name="name" placeholder="Name" onBlur={this.handleChange} />
+            { this.state.name.message.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
+          </Col>
+        </FormGroup>
+
         <FormGroup controlId="formHorizontalEmail" validationState={
           this.state.email.valid && this.state.full_messages.length == 0 ? null : 'error'
         }>

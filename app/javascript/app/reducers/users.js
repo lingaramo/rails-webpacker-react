@@ -1,10 +1,10 @@
 import * as ActionTypes from '../actions'
 
-const initialUserState = { didInvalidate: false, isFetching: false, data: [], links: { next: undefined } }
+const initialUserState = { didInvalidate: true, isFetching: false, data: [], links: { next: undefined } }
 const users = (state = initialUserState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_USERS:
-      return { ...initialUserState, isFetching: true }
+      return { ...initialUserState, didInvalidate: false, isFetching: true }
     case ActionTypes.FETCH_PAGINATED_USERS:
       return { ...state, isFetching: true }
     case ActionTypes.RECEIVE_USERS:

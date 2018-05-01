@@ -30,4 +30,17 @@ class User < ActiveRecord::Base
   def user?
     self.role == USER
   end
+
+  def self.search_by(query_string)
+    return self.all if query_string == "" || query_string.nil?
+    query_string = ActiveRecord::Base.sanitize_sql_like(query_string)
+    id = query_string
+    self.where("email LIKE :query OR name LIKE :query OR id = :id", id: integer_or_nil(query_string), query: "%#{query_string}%")
+  end
+
+  def self.integer_or_nil(str)
+    Integer(str || '')
+  rescue ArgumentError
+    nil
+  end
 end

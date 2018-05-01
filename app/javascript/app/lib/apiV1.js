@@ -138,8 +138,10 @@ class apiV1 {
     })
   }
 
-  getUsers( paginated_url ) {
-    return fetch( paginated_url || '/api/v1/user', this.getAuthInitObject()).then( res => {
+  getUsers( search = "", paginated_url = undefined ) {
+    let url = '/api/v1/user'
+    if (search != "") { url = url + `?search=${search}` }
+    return fetch( paginated_url || url, this.getAuthInitObject()).then( res => {
       return this.handleResponse( res )
     })
   }

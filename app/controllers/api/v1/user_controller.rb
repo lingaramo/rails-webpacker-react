@@ -1,6 +1,6 @@
 class Api::V1::UserController < ApiController
   def index
-    users = policy_scope(User).paginate(
+    users = policy_scope(User.search_by(params[:search])).paginate(
       page: params.dig(:page, :number),
       per_page: params.dig(:page, :page_size)
     )

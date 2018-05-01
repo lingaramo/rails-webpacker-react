@@ -43,10 +43,10 @@ const shouldFetchUsers = ( state ) => {
 
 export const fetchUsersAction = () => {
   return (dispatch, getState) => {
-    const { users } = getState()
-    if ( users.didInvalidate && !users.isFetching ) {
+    const { users, searchQuery } = getState()
+    if ( users.didInvalidate && !users.isFetching) {
       dispatch(fetchUsers())
-      apiV1.getUsers().then( res => {
+      apiV1.getUsers(searchQuery.search).then( res => {
         dispatch(receiveUsers( res ))
       })
     }
@@ -57,8 +57,8 @@ export const fetchPaginatedUsersAction = ( url ) => {
   return (dispatch, getState) => {
     if (shouldFetchUsers(getState()) && url != undefined) {
       dispatch(fetchPaginatedUsers())
-      const state = getState()
-      apiV1.getUsers( url ).then( res => {
+      const { searchQuery } = getState()
+      apiV1.getUsers( searchQuery.search, url ).then( res => {
         dispatch(receivePaginatedUsers( res ))
       })
     }

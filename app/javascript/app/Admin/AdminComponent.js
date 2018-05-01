@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchUsersAction } from '../actions'
 import UsersList from './UsersList'
+import SearchComponent from './SearchComponent'
 
 class AdminComponent extends Component {
 
@@ -17,7 +18,7 @@ class AdminComponent extends Component {
     const { users } = this.props
     return(
       <div>
-        <h1>Search Component</h1>
+        <SearchComponent />
         <UsersList users={ users } />
       </div>
     )

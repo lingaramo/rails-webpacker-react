@@ -26,7 +26,10 @@ const LoggedUserNavItems = ({ currentUser, history, dispatch }) => {
   return(
     <Nav pullRight>
       { ['manager', 'admin'].includes(currentUser.role) ? adminItems : null }
-      <NavItem eventKey={2} href="#" onSelect={() => signOut()} >
+      <NavItem eventKey={2} href="#" onSelect={() => history.push('/user/profile')} >
+        Profile
+      </NavItem>
+      <NavItem eventKey={3} href="#" onSelect={() => signOut()} >
         Logout
       </NavItem>
     </Nav>

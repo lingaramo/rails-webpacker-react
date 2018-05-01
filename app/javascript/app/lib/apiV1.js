@@ -89,6 +89,14 @@ class apiV1 {
     })
   }
 
+  updateUser( userId, body ) {
+    return fetch('/api/v1/user/' + userId,
+      this.patchAuthInitObject( body )
+    ).then( res => {
+      return this.handleResponse( res )
+    })
+  }
+
   signOut() {
     return fetch('/auth/sign_out', this.deleteAuthInitObject()).then( res => {
       if (res.ok) {

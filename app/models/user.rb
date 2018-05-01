@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   validates :password_confirmation, presence: true, on: :create
   validates_length_of :name, maximum: 200, allow_blank: true
+  validates :email, uniqueness: { message: "has already been taken" }
 
   USER = "user".freeze
   MANAGER = "manager".freeze

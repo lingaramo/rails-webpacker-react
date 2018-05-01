@@ -2,24 +2,27 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Col, HelpBlock } from 'react-bootstrap'
 
-import { userAuthenticatedAction } from '../actions'
+import { validateTokenAction, invalidateUsersList } from '../actions'
 import { validateEmail, validatePassword, validatePasswordConfirmation, validateName } from '../lib/validator'
 import apiV1 from '../lib/apiV1'
 import style from '../style/style'
 
-class SignUp extends Component {
+class EditUser extends Component {
+
 
   constructor(props) {
     super(props)
     let initialObject = { value: "", touched: false, valid: true, message: [] }
     this.state = {
-      name: initialObject,
-      email: initialObject,
+      name: { value: (props.name || ""), touched: false, valid: true, message: [] },
+      email: { value: (props.email || ""), touched: false, valid: true, message: [] },
       password: initialObject,
       password_confirmation: initialObject,
+      role: { value: (props.role || "user"), touched: false, valid: true, message: [] },
       full_messages: [],
     }
   }
@@ -33,7 +36,7 @@ class SignUp extends Component {
   }
 
   validateByType = (type) => {
-    let validation
+    let validation = this.state[type]
     switch (type) {
       case 'name':
         validation = validateName(this.state.name)
@@ -56,18 +59,23 @@ class SignUp extends Component {
   validateForm = () => {
     const { name, email, password, password_confirmation } = this.state
     return(
-      name.touched && name.valid &&
-      email.touched && email.valid &&
-      password.touched && password.valid &&
-      password_confirmation.touched && password_confirmation.valid
+      name.valid &&
+      email.valid &&
+      password.valid &&
+      password_confirmation.valid
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
+    const { userId, dispatch, history, currentUser, users } = this.props
     if ( this.validateForm() ) {
-      apiV1.createUser(this.formObject()).then( response => {
-        this.props.dispatch(userAuthenticatedAction(response.data))
+      apiV1.updateUser( userId, this.formObject()).then( response => {
+        if (currentUser.id == userId) { dispatch(validateTokenAction()) }
+        if (users.data.find( element => element.id == userId)) {
+          dispatch(invalidateUsersList())
+        }
+        history.push('/admin')
       }).catch( error => error.json().then( errorMessage => {
         this.setState({ full_messages: errorMessage.errors.full_messages })
       }))
@@ -75,16 +83,41 @@ class SignUp extends Component {
   }
 
   formObject = () => {
-    let { name, email, password, password_confirmation } = this.state
-    return({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value
-    })
+    let { name, email, password, password_confirmation, role } = this.state
+    let payload = { name: name.value, email: email.value, role: role.value }
+    if (password.value != "" && password_confirmation.value != "") {
+      payload['password'] = password.value
+      payload['password_confirmation'] = password_confirmation.value
+    }
+    return payload
   }
 
   render() {
+    const { name, email, role } = this.state
+    const { currentUser } = this.props
+    const RoleSelector = () => {
+      if (currentUser.role == 'admin') {
+        return(
+          <FormGroup controlId="formControlsSelect">
+            <Col componentClass={ControlLabel} sm={3}>
+              Role
+            </Col>
+            <Col sm={9}>
+              <FormControl type="select" name="role" componentClass="select"
+                placeholder="select" defaultValue={role.value} onChange={this.handleChange}
+                >
+                <option value="user">User</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+              </FormControl>
+            </Col>
+          </FormGroup>
+        )
+      } else {
+        return null
+      }
+    }
+
     return (
       <Form className={ style.FormHorizontal } horizontal>
         <FormGroup controlId="formHorizontalName" validationState={
@@ -94,7 +127,7 @@ class SignUp extends Component {
             Name (optional)
           </Col>
           <Col sm={9}>
-            <FormControl type="name" name="name" placeholder="Name" onBlur={this.handleChange} />
+            <FormControl type="name" name="name" placeholder="Name" defaultValue={name.value} onBlur={this.handleChange} />
             { this.state.name.message.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
           </Col>
         </FormGroup>
@@ -106,7 +139,7 @@ class SignUp extends Component {
             Email
           </Col>
           <Col sm={9}>
-            <FormControl type="email" name="email" placeholder="Email" onBlur={this.handleChange} />
+            <FormControl type="email" name="email" placeholder="Email" defaultValue={email.value} onBlur={this.handleChange} />
             { this.state.email.message.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
           </Col>
         </FormGroup>
@@ -135,9 +168,11 @@ class SignUp extends Component {
           </Col>
         </FormGroup>
 
+        <RoleSelector />
+
         <FormGroup>
           <Col smOffset={3} sm={9}>
-            <Button onClick={this.handleSubmit} type="submit">Sign in</Button>
+            <Button onClick={this.handleSubmit} type="submit">Update</Button>
           </Col>
         </FormGroup>
         <Col smOffset={3}>
@@ -148,8 +183,20 @@ class SignUp extends Component {
   }
 }
 
-SignUp.propTypes = {
+EditUser.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  name: PropTypes.string,
+  email: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
 }
 
-export default connect()(SignUp)
+const mapStateToProps = state => {
+  return({
+    currentUser: state.currentUser,
+    users: state.users
+  })
+}
+
+export default withRouter(connect(mapStateToProps)(EditUser))

@@ -7,7 +7,7 @@ export const validateEmail = ( email ) => {
 }
 
 export const validatePassword = password => {
-  if (password.value.length < 8) {
+  if (password.value.length < 8 && password.value != "") {
     return { ...password, valid: false, message: ['Invalid password. Must be at least 8 characters long.'] }
   }
   return { ...password, valid: true, message: [] }
@@ -28,7 +28,7 @@ export const validatePasswordConfirmation = (password, password_confirmation) =>
     validation.message.push("Password doesn't match.")
   }
 
-  if (password_confirmation.value.length < 8 ) {
+  if (password_confirmation.value.length < 8 && password_confirmation.value != "") {
     validation.valid = false
     validation.message.push("Password must be at least 8 characters long.")
   }

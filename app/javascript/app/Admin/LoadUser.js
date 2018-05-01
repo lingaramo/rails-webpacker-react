@@ -3,16 +3,26 @@ import PropTypes from 'prop-types'
 
 import { withRouter } from 'react-router-dom'
 
+import EditUser from '../shared/EditUser'
 import apiV1 from '../lib/apiV1'
 
 class LoadUser extends Component {
-  state = { user: { isFetching: true } }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      user: {
+        isFetching: true
+      }
+    }
+  }
+
   componentDidMount() {
     const { id } = this.props.match.params
     const { history } = this.props
 
     apiV1.getUser( id ).then( res => {
-      this.setState({ user: res.data })
+      this.setState({ user: { ...res.data, isFetching: false }})
     }).catch(error => {
       if (error.status == 404) {
         history.replace("/not_found")
@@ -22,9 +32,21 @@ class LoadUser extends Component {
     })
   }
 
+
   render() {
+    let s = this.state
+    const Result = () => {
+      if (this.state.user.isFetching) {
+        return(<h1>Loading...</h1>)
+      } else {
+        return( <EditUser {...this.state.user.attributes } userId={this.state.user.id} /> )
+      }
+    }
+
     return(
-      <h1>Edit User</h1>
+      <div>
+        <Result />
+      </div>
     )
   }
 }

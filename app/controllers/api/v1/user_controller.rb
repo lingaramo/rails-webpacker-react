@@ -27,7 +27,7 @@ class Api::V1::UserController < ApiController
     user = User.find(params[:id])
     authorize(user)
     if user.update(permitted_attributes)
-      render json: UserSerializer.new(user).serialized_json
+      render json: user
     else
       respond_with_errors(user)
     end

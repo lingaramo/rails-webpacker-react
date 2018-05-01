@@ -7,20 +7,13 @@ import { Grid, Row, Col } from 'react-bootstrap'
 
 import NavBar from './NavBar/NavBar'
 import MountApp from './MountApp'
-import apiV1 from './lib/apiV1'
-import { userAuthenticatedAction, userLogoutAction } from './actions'
+import { validateTokenAction } from './actions'
 
 class App extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props
-    apiV1.validateToken().then( response => {
-      dispatch(userAuthenticatedAction(response.data))
-    }).catch( error => {
-      if (error.status == 401) {
-        dispatch(userLogoutAction())
-      }
-    })
+    dispatch(validateTokenAction())
   }
 
   render() {

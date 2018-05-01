@@ -75,7 +75,7 @@ class EditUser extends Component {
         if (users.data.find( element => element.id == userId)) {
           dispatch(invalidateUsersList())
         }
-        history.push('/admin')
+        history.push('/user')
       }).catch( error => error.json().then( errorMessage => {
         this.setState({ full_messages: errorMessage.errors.full_messages })
       }))

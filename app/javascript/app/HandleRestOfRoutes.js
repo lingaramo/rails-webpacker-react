@@ -9,6 +9,7 @@ const HandleRestOfRoutes = props => {
   return(
     <Switch>
       <Route exact path="/reset_password" component={ ResetPassword } />
+      <Route exact path="/not_authorized" render ={ () => <h1>Not Authorized</h1> } />
       <Route render ={ () => <h1>Not Found</h1> } />
     </Switch>
   )

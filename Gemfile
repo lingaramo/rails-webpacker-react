@@ -33,7 +33,6 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise_token_auth'
 gem 'pundit'
 
-gem 'fast_jsonapi'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'will_paginate', '~> 3.1.0'
 

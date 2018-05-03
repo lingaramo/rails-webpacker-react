@@ -36,6 +36,7 @@ jobs:
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
             yarn install
+            sudo apt-get install postgresql-client
 
 
       - save_cache:

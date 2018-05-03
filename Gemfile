@@ -47,6 +47,9 @@ group :development, :test do
   gem 'faker'
 
   gem 'pry-rails'
+
+  # for circle-ci
+  gem 'rspec_junit_formatter'
 end
 
 group :development do

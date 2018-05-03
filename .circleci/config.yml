@@ -87,6 +87,8 @@ jobs:
           destination: test-results
 
   deploy-job:
+    machine:
+      enabled: true
     steps:
       - checkout
       - run:

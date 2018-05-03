@@ -7,8 +7,13 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-       - image: circleci/ruby:2.3.4-node-browsers
-
+      - image: circleci/ruby:2.3.4-node-browsers
+          enviroment:
+            RAILS_ENV: test
+            PGUSER: rails-webpacker-react-test
+            PGHOST: 127.0.0.1
+            POSTGRES_DB: rails-webpacker-react_test
+            POSTGRES_PASSWORD: ""
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -31,6 +36,7 @@ jobs:
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
             yarn install
+
 
       - save_cache:
           paths:

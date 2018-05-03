@@ -32,7 +32,7 @@ const SearchComponent = props => {
   return(
     <Form inline>
       <FormGroup controlId="formInlineSearch">
-        <FormControl type="text" name="search" placeholder="Search" />
+        <FormControl type="text" name="search" placeholder="Search" defaultValue={searchQuery.search}/>
       </FormGroup>{' '}
       <Button type="submit" onClick={handleSubmit}>Filter</Button>{' '}
       <Button type="submit" onClick={handleClear}>Clear</Button>

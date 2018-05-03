@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 
 import { fetchUsersAction } from '../actions'
 import UsersList from './UsersList'
@@ -19,6 +20,7 @@ class AdminComponent extends Component {
     return(
       <div>
         <SearchComponent />
+        <Link to='/admin/user/new'><Button>New User</Button></Link>
         <UsersList users={ users } />
       </div>
     )

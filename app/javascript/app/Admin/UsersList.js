@@ -4,12 +4,12 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Table } from 'react-bootstrap'
+import { Table, Button } from 'react-bootstrap'
 
 import { fetchPaginatedUsersAction } from '../actions'
+import DeleteUserButton from './DeleteUserButton'
 
 const UsersList = ({ users, dispatch }) => {
-
   const UserItem = user => {
     const id = user.id
     const { name, email, role } = user.attributes
@@ -20,8 +20,11 @@ const UsersList = ({ users, dispatch }) => {
         <td>{ email }</td>
         <td>{ role }</td>
         <td>
+          <DeleteUserButton userId={id} userEmail={email} />
           <Link to={"/admin/user/" + id + "/edit"}>
-            Edit
+            <Button>
+              Edit
+            </Button>
           </Link>
         </td>
       </tr>

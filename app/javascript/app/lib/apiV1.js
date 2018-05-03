@@ -80,7 +80,7 @@ class apiV1 {
     })
   }
 
-  createUser( body ) {
+  signUpUser( body ) {
     return fetch('/auth',
       this.postInitObject( body )
     ).then(response => {
@@ -89,11 +89,27 @@ class apiV1 {
     })
   }
 
+  createUser( body ) {
+    return fetch('/api/v1/user',
+      this.postAuthInitObject( body )
+    ).then( res => {
+      return this.handleResponse( res )
+    })
+  }
+
   updateUser( userId, body ) {
     return fetch('/api/v1/user/' + userId,
       this.patchAuthInitObject( body )
     ).then( res => {
       return this.handleResponse( res )
+    })
+  }
+
+  deleteUser( userId ) {
+    return fetch('/api/v1/user/' + userId,
+      this.deleteAuthInitObject()
+    ).then( res => {
+      return res
     })
   }
 

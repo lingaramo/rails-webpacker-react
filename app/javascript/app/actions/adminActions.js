@@ -5,6 +5,11 @@ export const fetchUsers = () => {
   return({ type: FETCH_USERS })
 }
 
+export const REMOVE_USER = 'REMOVE_USER'
+export const removeUser = (userId) => {
+  return({ type: REMOVE_USER, userId })
+}
+
 export const FETCH_PAGINATED_USERS = 'FETCH_PAGINATED_USERS'
 export const fetchPaginatedUsers = () => {
   return({ type: FETCH_PAGINATED_USERS })

@@ -32,13 +32,15 @@ class LoadUser extends Component {
     })
   }
 
-
   render() {
     const Result = () => {
       if (this.state.user.isFetching) {
         return(<h1>Loading...</h1>)
       } else {
-        return( <EditUser {...this.state.user.attributes } userId={this.state.user.id} /> )
+        return( <EditUser {...this.state.user.attributes }
+          userId={this.state.user.id} action='update'
+          redirectTo='/admin'
+        /> )
       }
     }
 

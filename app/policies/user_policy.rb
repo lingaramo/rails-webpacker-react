@@ -12,7 +12,8 @@ class UserPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin? || user.manager?
+    user.admin? ||
+    user.manager? && record.role == 'user'
   end
 
   def show?
@@ -27,7 +28,7 @@ class UserPolicy < ApplicationPolicy
 
   def destroy?
     user.admin? ||
-    user.manager? && record.role == 'user' && user.id != record.id 
+    user.manager? && record.role == 'user' && user.id != record.id
   end
 
   class Scope < Scope

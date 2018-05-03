@@ -68,33 +68,53 @@ class EditUser extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { userId, dispatch, history, currentUser, users } = this.props
+    const { userId, dispatch, history, currentUser, users, action, redirectTo } = this.props
     if ( this.validateForm() ) {
-      apiV1.updateUser( userId, this.formObject()).then( response => {
+      let apiResponse
+      if (action == 'create') {
+        apiResponse = apiV1.createUser( this.formObject() )
+      } else if (action == 'update') {
+        apiResponse = apiV1.updateUser( userId, this.formObject() )
+      }
+      apiResponse.then( response => {
         if (currentUser.id == userId) { dispatch(validateTokenAction()) }
         if (users.data.find( element => element.id == userId)) {
           dispatch(invalidateUsersList())
         }
-        history.push('/user')
+        history.push(redirectTo)
       }).catch( error => error.json().then( errorMessage => {
         this.setState({ full_messages: errorMessage.errors.full_messages })
       }))
     }
   }
 
+  handleReset = (e) => {
+    e.preventDefault()
+    const { email } = this.state
+    if ( email.valid ) {
+      if (window.confirm('Do you really want to reset password?')) {
+        apiV1.requestPasswordReset({ email: email.value }).then( res =>
+          console.log(res.message)
+        ).catch(error => error.json().then(errorMessage => {
+          this.setState({ full_messages: errorMessage.errors })
+        }))
+      }
+    }
+  }
+
   formObject = () => {
     let { name, email, password, password_confirmation, role } = this.state
-    let payload = { name: name.value, email: email.value, role: role.value }
+    let payload = {user: { name: name.value, email: email.value, role: role.value }}
     if (password.value != "" && password_confirmation.value != "") {
-      payload['password'] = password.value
-      payload['password_confirmation'] = password_confirmation.value
+      payload['user']['password'] = password.value
+      payload['user']['password_confirmation'] = password_confirmation.value
     }
     return payload
   }
 
   render() {
     const { name, email, role } = this.state
-    const { currentUser } = this.props
+    const { currentUser, action } = this.props
     const RoleSelector = () => {
       if (currentUser.role == 'admin') {
         return(
@@ -117,6 +137,8 @@ class EditUser extends Component {
         return null
       }
     }
+
+    const capitalizedAction = action[0].toUpperCase() + action.slice(1);
 
     return (
       <Form className={ style.FormHorizontal } horizontal>
@@ -172,7 +194,8 @@ class EditUser extends Component {
 
         <FormGroup>
           <Col smOffset={3} sm={9}>
-            <Button onClick={this.handleSubmit} type="submit">Update</Button>
+            <Button onClick={this.handleSubmit} type="submit">{capitalizedAction}</Button>
+            <Button onClick={this.handleReset} type="submit">Reset password</Button>
           </Col>
         </FormGroup>
         <Col smOffset={3}>
@@ -187,9 +210,8 @@ EditUser.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
-  name: PropTypes.string,
-  email: PropTypes.string.isRequired,
-  role: PropTypes.string.isRequired,
+  redirectTo: PropTypes.string.isRequired,
+  action: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = state => {

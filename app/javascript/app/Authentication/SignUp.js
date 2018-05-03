@@ -66,7 +66,7 @@ class SignUp extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     if ( this.validateForm() ) {
-      apiV1.createUser(this.formObject()).then( response => {
+      apiV1.signUpUser(this.formObject()).then( response => {
         this.props.dispatch(userAuthenticatedAction(response.data))
       }).catch( error => error.json().then( errorMessage => {
         this.setState({ full_messages: errorMessage.errors.full_messages })

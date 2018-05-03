@@ -11,7 +11,7 @@ class Api::V1::UserController < ApiController
     user = User.new(permitted_attributes)
     authorize(user)
     if user.save
-      render json: UserSerializer.new(user).serialized_json, status: :created
+      render json: user, status: :created
     else
       respond_with_errors(user)
     end

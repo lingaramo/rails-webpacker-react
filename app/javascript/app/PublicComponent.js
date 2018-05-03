@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PublicComponent = props => {
+const PublicComponent = () => {
   return(
     <h1>Wellcome to the app. Please sign in/up.</h1>
   )

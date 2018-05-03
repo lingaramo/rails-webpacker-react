@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import ResetPassword from './User/ResetPassword'
 
-const HandleRestOfRoutes = props => {
+const HandleRestOfRoutes = () => {
   return(
     <Switch>
       <Route exact path="/reset_password" component={ ResetPassword } />
@@ -15,8 +14,4 @@ const HandleRestOfRoutes = props => {
   )
 }
 
-HandleRestOfRoutes.propTypes = {
-  history: PropTypes.object.isRequired
-}
-
-export default withRouter(HandleRestOfRoutes)
+export default HandleRestOfRoutes

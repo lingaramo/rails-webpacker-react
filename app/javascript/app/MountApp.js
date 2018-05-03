@@ -10,7 +10,7 @@ import UserComponent from './User/UserComponent'
 import AdminRoutes from './Admin/AdminRoutes'
 import HandleRestOfRoutes from './HandleRestOfRoutes'
 
-const MountApp = ({ currentUser, history }) => {
+const MountApp = ({ currentUser }) => {
   if  (currentUser.authenticated) {
     return(
       <Switch>
@@ -38,7 +38,6 @@ const MountApp = ({ currentUser, history }) => {
 
 MountApp.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
 }
 
 export default withRouter(MountApp)

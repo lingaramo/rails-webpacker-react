@@ -26,7 +26,7 @@ class LoadUser extends Component {
     }).catch(error => {
       if (error.status == 404) {
         history.replace("/not_found")
-      } else if (error.status = 401) {
+      } else if (error.status == 401) {
         history.replace("/not_authorized")
       }
     })
@@ -34,7 +34,6 @@ class LoadUser extends Component {
 
 
   render() {
-    let s = this.state
     const Result = () => {
       if (this.state.user.isFetching) {
         return(<h1>Loading...</h1>)

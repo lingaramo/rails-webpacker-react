@@ -28,7 +28,7 @@ const UsersList = ({ users, dispatch }) => {
     )
   }
 
-  const nextPage = (atr) => {
+  const nextPage = () => {
     if (users.links.next != undefined) {
       dispatch(fetchPaginatedUsersAction( users.links.next ))
     }

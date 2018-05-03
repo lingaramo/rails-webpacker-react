@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { Navbar, NavItem, Nav } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
 
 import LoggedUserNavItems from './LoggedUserNavItems'
 import UnLoggedUserNavItems from './UnLoggedUserNavItems'

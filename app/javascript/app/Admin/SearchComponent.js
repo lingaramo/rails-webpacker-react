@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Form, FormGroup, FormControl, Button } from 'react-bootstrap'
 
-import { searchQueryAction, clearSearchQueryAction, invalidateUsersList, fetchUsersAction } from '../actions'
+import { searchQueryAction, invalidateUsersList, fetchUsersAction } from '../actions'
 
 const SearchComponent = props => {
   const { dispatch, searchQuery } = props

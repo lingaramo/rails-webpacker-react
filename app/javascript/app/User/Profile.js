@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 
@@ -10,6 +11,10 @@ const Profile = props => {
     <EditUser name={currentUser.name} email={currentUser.email}
       role={currentUser.role} userId={currentUser.id} />
   )
+}
+
+Profile.propTypes = {
+  currentUser: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => {

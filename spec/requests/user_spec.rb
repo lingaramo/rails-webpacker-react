@@ -30,27 +30,28 @@ RSpec.describe "Requests on USER resource" do
   end
 
   describe "as admin" do
-    # it "can get a complete list of users (#index)" do
-    #   get api_v1_user_index_path, headers: headers.merge(authentication_headers_for(admin1))
-    #   expect(response).to have_http_status(200)
-    #   expect(response.body).to eq(Serializer.ams(UserSerializer.new(User.all)))
-    # end
-    #
-    # it "can create new users with any role" do
-    #   ['user', 'manager', 'admin'].each do |role|
-    #     payload = data_payload(role: role)
-    #     expect(User.find_by(email: payload[:user][:email])).to be(nil)
-    #     expect {
-    #       post api_v1_user_index_path,
-    #         params: payload,
-    #         headers: headers.merge(authentication_headers_for(admin1))
-    #     }.to change { User.count }.by(+1)
-    #     expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
-    #     expect(response).to have_http_status(201)
-    #     expect(response.body).to eq(
-    #     UserSerializer.new(Serializer.ams(User.find_by(email: payload[:user][:email]))))
-    #   end
-    # end
+    it "can get a complete list of users (#index)" do
+      get api_v1_user_index_path, headers: headers.merge(authentication_headers_for(admin1))
+      expect(JSON.parse(response.body)['data'].count).to eq(User.count)
+    end
+
+    it "can create new users with any role" do
+      ['user', 'manager', 'admin'].each do |role|
+        payload = data_payload(role: role)
+        expect(User.find_by(email: payload[:user][:email])).to be(nil)
+        expect {
+          post api_v1_user_index_path,
+            params: payload,
+            headers: headers.merge(authentication_headers_for(admin1))
+        }.to change { User.count }.by(+1)
+        expect(User.find_by(email: payload[:user][:email])).not_to be(nil)
+        expect(response).to have_http_status(201)
+        response_body = JSON.parse(response.body)['data']['attributes']
+        expect(response_body['role']).to eq(role)
+        expect(response_body['email']).to eq(payload[:user][:email])
+        expect(response_body['name']).to eq(payload[:user][:name])
+      end
+    end
 
     it "can update any user with any role" do
       [admin2, manager1, user1].each do |user_to_update|
@@ -100,11 +101,13 @@ RSpec.describe "Requests on USER resource" do
   end
 
   describe "as manager" do
-    # it "can get a complete list of user, except for users with admin or manager role (#index)" do
-    #   get api_v1_user_index_path, headers: headers.merge(authentication_headers_for(manager1))
-    #   expect(response).to have_http_status(200)
-    #   expect(response.body).to eq(ActiveModel::SerializableResource.new(User.where.not(role: ['manager', 'admin'])).to_json)
-    # end
+    it "can get a complete list of user, except for users with admin or manager role (#index)" do
+      get api_v1_user_index_path, headers: headers.merge(authentication_headers_for(manager1))
+      expect(response).to have_http_status(200)
+      JSON.parse(response.body)['data'].each do |user|
+        expect(user['attributes']['role'] == 'user')
+      end
+    end
 
     it "can create new regular users, but not others managers or admin" do
       ['manager', 'admin'].each do |role|

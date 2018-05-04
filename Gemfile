@@ -49,6 +49,10 @@ group :development, :test do
 
   # for circle-ci
   gem 'rspec_junit_formatter'
+  gem 'capybara'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
+  gem 'launchy'
 end
 
 group :development do

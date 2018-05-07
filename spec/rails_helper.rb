@@ -16,8 +16,8 @@ Capybara.register_driver :chrome_headless do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
-Capybara.default_driver = :chrome
-Capybara.javascript_driver = :chrome
+Capybara.default_driver = :chrome_headless
+Capybara.javascript_driver = :chrome_headless
 
 # Add additional requires below this line. Rails is not loaded until this point!
 # Requires supporting ruby files with custom matchers and macros, etc, in

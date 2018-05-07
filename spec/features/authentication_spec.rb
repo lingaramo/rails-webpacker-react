@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "User", type: :feature do
+RSpec.describe "User" do
   specify "sign up" do
     visit '/sign_up'
     fill_in :name,                  with: name = Faker::Name.name

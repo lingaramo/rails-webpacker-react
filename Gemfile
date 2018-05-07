@@ -52,8 +52,8 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-selenium'
   gem 'selenium-webdriver'
+  gem "chromedriver-helper"
   gem 'launchy'
-  gem 'poltergeist'
 end
 
 group :development do

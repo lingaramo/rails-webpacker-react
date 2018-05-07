@@ -1,8 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "User" do
+RSpec.describe "User", js: true do
   specify "sign up" do
     visit '/sign_up'
+    save_screenshot('~/file.png', :full => true)
     fill_in :name,                  with: name = Faker::Name.name
     fill_in :email,                 with: email = Faker::Internet.email
     fill_in :password,              with: password = 12345678
@@ -17,8 +18,10 @@ RSpec.describe "User" do
     user = Fabricate(:user)
     fill_in :email,                 with: user.email
     fill_in :password,              with: user.password
-    expect {
-      click_on 'Sign in'
-    }.to change{ current_path }
+    click_on "Sign in"
+    expect(page).to have_content("email: #{user.email}")
+    # expect {
+    #   click_on 'Sign in'
+    # }.to change{ current_path }
   end
 end

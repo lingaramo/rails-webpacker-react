@@ -52,7 +52,6 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-selenium'
   gem 'selenium-webdriver'
-  gem 'chromedriver-helper'
   gem 'launchy'
 end
 

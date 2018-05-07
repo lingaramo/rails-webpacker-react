@@ -49,8 +49,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    archive-zip (0.7.0)
-      io-like (~> 0.3.0)
     arel (9.0.0)
     bcrypt (3.1.11)
     bindex (0.5.0)
@@ -71,9 +69,6 @@ GEM
       activesupport
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (1.1.0)
-      archive-zip (~> 0.7.0)
-      nokogiri (~> 1.6)
     coderay (1.1.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -104,7 +99,6 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.0.0)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -262,7 +256,6 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   capybara
   capybara-selenium
-  chromedriver-helper
   coffee-rails (~> 4.2)
   devise_token_auth
   fabrication

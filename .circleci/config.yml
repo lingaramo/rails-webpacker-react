@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
 
-      Download and cache dependencies
+      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
@@ -71,6 +71,7 @@ jobs:
             sudo apt-get update &&
             sudo apt-get install -t sid firefox &&
             firefox --version
+
       - save_cache:
           paths:
             - ./vendor/bundle

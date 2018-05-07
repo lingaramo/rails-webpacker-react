@@ -56,14 +56,15 @@ class SignUp extends Component {
   validateForm = () => {
     const { name, email, password, password_confirmation } = this.state
     return(
-      name.touched && name.valid &&
-      email.touched && email.valid &&
-      password.touched && password.valid &&
-      password_confirmation.touched && password_confirmation.valid
+      name.valid &&
+      email.valid &&
+      password.valid &&
+      password_confirmation.valid
     )
   }
 
   handleSubmit = (e) => {
+
     e.preventDefault()
     if ( this.validateForm() ) {
       apiV1.signUpUser(this.formObject()).then( response => {
@@ -137,7 +138,7 @@ class SignUp extends Component {
 
         <FormGroup>
           <Col smOffset={3} sm={9}>
-            <Button onClick={this.handleSubmit} type="submit">Sign in</Button>
+            <Button onClick={this.handleSubmit} type="submit">Sign up</Button>
           </Col>
         </FormGroup>
         <Col smOffset={3}>

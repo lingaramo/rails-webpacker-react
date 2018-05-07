@@ -51,6 +51,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'capybara'
   gem 'capybara-selenium'
+  gem 'selenium-webdriver'
   gem 'chromedriver-helper'
   gem 'launchy'
 end

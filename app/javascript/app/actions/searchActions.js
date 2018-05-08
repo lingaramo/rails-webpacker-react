@@ -18,6 +18,5 @@ export const clearSearchQueryAction = () => {
 export const searchAction = searchString => {
   return dispatch => {
     dispatch(searchQueryAction(searchString))
-    // apiV1.
   }
 }

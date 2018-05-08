@@ -12,17 +12,32 @@ import apiV1 from '../lib/apiV1'
 import style from '../style/style'
 
 class EditUser extends Component {
-
-
   constructor(props) {
     super(props)
-    let initialObject = { value: "", touched: false, valid: true, message: [] }
+    let initialObject = { value: "", valid: true, message: [] }
+    this.apiAction
     this.state = {
-      name: { value: (props.name || ""), touched: false, valid: true, message: [] },
-      email: { value: (props.email || ""), touched: false, valid: true, message: [] },
+      name: {
+        value: (props.name || ""),
+        initialValue: (props.name || ""),
+        valid: true,
+        message: []
+      },
+      email: {
+        value: (props.email || ""),
+        initialValue: (props.email || ""),
+        valid: true,
+        message: []
+      },
       password: initialObject,
       password_confirmation: initialObject,
-      role: { value: (props.role || "user"), touched: false, valid: true, message: [] },
+      role: {
+        value: (props.role || "user"),
+        initialValue: (props.role || "user"),
+        valid: true,
+        message: []
+      },
+      passwordResetMessage: undefined,
       full_messages: [],
     }
   }
@@ -30,13 +45,11 @@ class EditUser extends Component {
   handleChange = (e) => {
     let type = e.target.name
     let value = e.target.value || ""
-    let self = this
-    this.setState({ [type]: { ...this.state[type], value: value, touched: true }},
-      () => (this.validateByType(type)))
+    this.setState({ [type]: { ...this.state[type], value: value }})
   }
 
   validateByType = (type) => {
-    let validation = this.state[type]
+    let validation
     switch (type) {
       case 'name':
         validation = validateName(this.state.name)
@@ -45,7 +58,7 @@ class EditUser extends Component {
         validation = validateEmail(this.state.email)
         break
       case 'password':
-        validation = validatePassword(this.state.password)
+        validation = validatePassword(this.state.password, this.props.allowBlankPassword)
         this.validateByType('password_confirmation')
         break
       case 'password_confirmation':
@@ -54,31 +67,51 @@ class EditUser extends Component {
       default:
     }
     this.setState({ [type]: validation, full_messages: [] })
+    return validation.valid
   }
 
-  validateForm = () => {
-    const { name, email, password, password_confirmation } = this.state
+  validateForm = (fields = ['name', 'email', 'password', 'password_confirmation']) => {
+    let valid = true
+    let fieldIsValid
+    fields.forEach( field => {
+      fieldIsValid = this.validateByType(field)
+      valid = valid && fieldIsValid
+    })
+    return valid
+  }
+
+  formWasUpdated = () => {
+    const { name, email, role, password } = this.state
     return(
-      name.valid &&
-      email.valid &&
-      password.valid &&
-      password_confirmation.valid
+      name.value != name.initialValue ||
+      email.value != email.initialValue ||
+      role.value != role.initialValue ||
+      password.value.length != 0
     )
+  }
+
+  performRequest = () => {
+    const { userId, history, action, redirectTo } = this.props
+
+    if (action == 'create') {
+      return apiV1.createUser( this.formObject() )
+    }
+    if (action == 'update' && this.formWasUpdated()) {
+        return apiV1.updateUser( userId, this.formObject() )
+    } else {
+      history.push(redirectTo)
+      return new Promise(() => {})
+    }
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
     const { userId, dispatch, history, currentUser, users, action, redirectTo } = this.props
-    if ( this.validateForm() ) {
-      let apiResponse
-      if (action == 'create') {
-        apiResponse = apiV1.createUser( this.formObject() )
-      } else if (action == 'update') {
-        apiResponse = apiV1.updateUser( userId, this.formObject() )
-      }
+    if ( this.validateForm()) {
+      let apiResponse = this.performRequest()
       apiResponse.then( response => {
-        if (currentUser.id == userId) { dispatch(validateTokenAction()) }
-        if (users.data.find( element => element.id == userId)) {
+        if (currentUser.id == userId) { dispatch(validateTokenAction()) } // Pasword or uid could be changed
+        if (users.data.find( user => user.id == userId)) {
           dispatch(invalidateUsersList())
         }
         history.push(redirectTo)
@@ -91,10 +124,12 @@ class EditUser extends Component {
   handleReset = (e) => {
     e.preventDefault()
     const { email } = this.state
-    if ( email.valid ) {
+    if ( this.validateForm(['email']) ) {
       if (window.confirm('Do you really want to reset password?')) {
         apiV1.requestPasswordReset({ email: email.value }).then( res =>
-          console.log(res.message)
+          this.setState({
+            passwordResetMessage: `Password reset instructions sent to ${this.state.email.value}`
+          })
         ).catch(error => error.json().then(errorMessage => {
           this.setState({ full_messages: errorMessage.errors })
         }))
@@ -195,11 +230,21 @@ class EditUser extends Component {
         <FormGroup>
           <Col smOffset={3} sm={9}>
             <Button onClick={this.handleSubmit} type="submit">{capitalizedAction}</Button>
-            <Button onClick={this.handleReset} type="submit">Reset password</Button>
+            { this.props.action == 'update' ?
+              <Button onClick={this.handleReset} type="submit">Reset password</Button>
+              :
+              null
+            }
           </Col>
         </FormGroup>
+
         <Col smOffset={3}>
           { this.state.full_messages.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
+          { this.state.passwordResetMessage ?
+            <HelpBlock>{this.state.passwordResetMessage}</HelpBlock>
+            :
+            null
+          }
         </Col>
       </Form>
     )

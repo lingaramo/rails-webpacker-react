@@ -10,7 +10,7 @@ const Profile = props => {
   return(
     <EditUser name={currentUser.name} email={currentUser.email}
       role={currentUser.role} userId={currentUser.id} action='update'
-      redirectTo='/user'
+      redirectTo='/user' allowBlankPassword={true}
     />
   )
 }

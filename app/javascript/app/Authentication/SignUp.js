@@ -14,7 +14,7 @@ class SignUp extends Component {
 
   constructor(props) {
     super(props)
-    let initialObject = { value: "", touched: false, valid: true, message: [] }
+    let initialObject = { value: "", valid: true, message: [] }
     this.state = {
       name: initialObject,
       email: initialObject,
@@ -27,9 +27,7 @@ class SignUp extends Component {
   handleChange = (e) => {
     let type = e.target.name
     let value = e.target.value || ""
-    let self = this
-    this.setState({ [type]: { ...this.state[type], value: value, touched: true }},
-      () => (this.validateByType(type)))
+    this.setState({ [type]: { ...this.state[type], value: value }})
   }
 
   validateByType = (type) => {
@@ -51,20 +49,21 @@ class SignUp extends Component {
       default:
     }
     this.setState({ [type]: validation, full_messages: [] })
+    return validation.valid
   }
 
   validateForm = () => {
-    const { name, email, password, password_confirmation } = this.state
-    return(
-      name.valid &&
-      email.valid &&
-      password.valid &&
-      password_confirmation.valid
-    )
+    let valid = true
+    let fieldIsValid
+    let fields = ['name', 'email', 'password', 'password_confirmation']
+    fields.forEach( field => {
+      fieldIsValid = this.validateByType(field)
+      valid = valid && fieldIsValid
+    })
+    return valid
   }
 
   handleSubmit = (e) => {
-
     e.preventDefault()
     if ( this.validateForm() ) {
       apiV1.signUpUser(this.formObject()).then( response => {

@@ -19,6 +19,7 @@ class SignIn extends Component {
       email: initialObject,
       password: initialObject,
       full_messages: [],
+      passwordResetMessage: undefined
     }
   }
 
@@ -26,8 +27,7 @@ class SignIn extends Component {
     let type = e.target.name
     let value = e.target.value || ""
 
-    this.setState({ [type]: { ...this.state[type], value: value, touched: true }},
-      () => (this.validateByType(type)))
+    this.setState({ [type]: { ...this.state[type], value: value }})
   }
 
   validateByType = (type) => {
@@ -42,6 +42,7 @@ class SignIn extends Component {
       default:
     }
     this.setState({ [type]: validation, full_messages: [] })
+    return validation.valid
   }
 
   handleSubmit = (e) => {
@@ -58,21 +59,25 @@ class SignIn extends Component {
   handleReset = (e) => {
     e.preventDefault()
     const { email } = this.state
-    if ( email.touched && email.valid ) {
+    if ( this.validateForm(['email']) ) {
       apiV1.requestPasswordReset({ email: email.value }).then( res =>
-        console.log(res.message)
+        this.setState({
+          passwordResetMessage: `Password reset instructions sent to ${this.state.email.value}`
+        })
       ).catch(error => error.json().then(errorMessage => {
         this.setState({ full_messages: errorMessage.errors })
       }))
     }
   }
 
-  validateForm = () => {
-    const { email, password, password_confirmation } = this.state
-    return(
-      email.touched && email.valid &&
-      password.touched && password.valid
-    )
+  validateForm = (fields = ['email', 'password']) => {
+    let valid = true
+    let fieldIsValid
+    fields.forEach( field => {
+      fieldIsValid = this.validateByType(field)
+      valid = valid && fieldIsValid
+    })
+    return valid
   }
 
   formObject = () => {
@@ -118,6 +123,11 @@ class SignIn extends Component {
         </FormGroup>
         <Col smOffset={2}>
           { this.state.full_messages.map((error, index) => (<HelpBlock key={index}>{error}</HelpBlock>)) }
+          { this.state.passwordResetMessage ?
+            <HelpBlock>{this.state.passwordResetMessage}</HelpBlock>
+            :
+            null
+          }
         </Col>
       </Form>
     )

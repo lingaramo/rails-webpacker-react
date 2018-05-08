@@ -6,7 +6,7 @@ import { Switch, Route } from 'react-router-dom'
 
 import Profile from './Profile'
 
-const UserComponent = ({ currentUser }) => {
+const UserRoutes = ({ currentUser }) => {
 
   const CurrentUser = () => (
     <ul>
@@ -22,7 +22,7 @@ const UserComponent = ({ currentUser }) => {
   )
 }
 
-UserComponent.propTypes = {
+UserRoutes.propTypes = {
   currentUser: PropTypes.object.isRequired
 }
 
@@ -32,4 +32,4 @@ const mapStateToProps = state => {
   })
 }
 
-export default connect(mapStateToProps)(UserComponent)
+export default connect(mapStateToProps)(UserRoutes)

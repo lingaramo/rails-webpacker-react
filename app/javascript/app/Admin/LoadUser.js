@@ -26,7 +26,7 @@ class LoadUser extends Component {
     }).catch(error => {
       if (error.status == 404) {
         history.replace("/not_found")
-      } else if (error.status == 401) {
+      } else if (error.status == 403) {
         history.replace("/not_authorized")
       }
     })
@@ -39,7 +39,7 @@ class LoadUser extends Component {
       } else {
         return( <EditUser {...this.state.user.attributes }
           userId={this.state.user.id} action='update'
-          redirectTo='/admin'
+          redirectTo='/admin' allowBlankPassword={true}
         /> )
       }
     }

@@ -42,7 +42,12 @@ class Api::V1::UserController < ApiController
   private
 
   def permitted_attributes
-    raise Pundit::NotAuthorizedError if params[:user].include?(:role) and !current_user.admin? and params[:user][:role] != 'user'
+    role = params[:user][:role]
+    id = params[:id].to_i
+    raise Pundit::NotAuthorizedError if role &&
+      (current_user.user? && role != 'user') ||
+      (current_user.manager? && ( role == 'admin' )) ||
+      (current_user.manager? && ( role == 'manager' && current_user.id != id))
     params.require(:user).permit(policy(:user).permitted_attributes)
   end
 end

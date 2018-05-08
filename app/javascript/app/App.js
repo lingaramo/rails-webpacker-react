@@ -12,8 +12,7 @@ import { validateTokenAction } from './actions'
 class App extends Component {
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(validateTokenAction())
+    this.props.dispatch(validateTokenAction())
   }
 
   render() {
@@ -24,7 +23,7 @@ class App extends Component {
         </Row>
 
         <Row className="show-grid">
-          <MountApp currentUser={this.props.currentUser} />
+          <MountApp />
         </Row>
       </Grid>
     )
@@ -32,14 +31,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  currentUser: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => {
-  return{
-    currentUser: state.currentUser
-  }
-}
-
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect()(App))

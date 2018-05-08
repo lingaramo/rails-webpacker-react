@@ -26,6 +26,6 @@ Capybara.register_driver :selenium_firefox do |app|
   )
 end
 
-
+Capybara.default_selector = :xpath
 Capybara.default_driver = :selenium_firefox
 Capybara.javascript_driver = :selenium_firefox

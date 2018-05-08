@@ -14,7 +14,7 @@ const UsersList = ({ users, dispatch }) => {
     const id = user.id
     const { name, email, role } = user.attributes
     return(
-      <tr>
+      <tr id={id}>
         <td>{ id }</td>
         <td>{ name }</td>
         <td>{ email }</td>
